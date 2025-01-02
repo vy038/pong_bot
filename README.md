@@ -1,10 +1,6 @@
 # PONG BOT V1.5
 
-# DEMO
-
 ![Pong_BotManualDemo-ezgif com-optimize](https://github.com/user-attachments/assets/dd1ae97f-c8b9-466b-a60a-9e3eb2252fb0)
-
-# DESCRIPTION
 
 An advanced and ambitious project I wanted to make with some spare parts and kits in my home, where a robot would be placed on a ping pong table with a bunch of ping pong balls inside. A gun with a firing mechanism I designed would lay on top of a chassis with omnidirectional wheels, as well as IR distance sensors on the back and sides. The robot would be completely autonomous, using a random number generator to decide where to move (uses sensors to ensure it doesn’t fall off the table), and when to fire a ball. The gun was designed to hold multiple balls, allowing me to practice playing ping pong alone. It also has an ESP32 devkit attached so it can wirelessly receive signals from a wireless controller, allowing it to switch from manual to autonomous.
 
