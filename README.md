@@ -1,8 +1,14 @@
 # PONG BOT V1.5
 
+# DEMO
+
+![Pong_BotManualDemo-ezgif com-optimize](https://github.com/user-attachments/assets/dd1ae97f-c8b9-466b-a60a-9e3eb2252fb0)
+
+# DESCRIPTION
+
 An advanced and ambitious project I wanted to make with some spare parts and kits in my home, where a robot would be placed on a ping pong table with a bunch of ping pong balls inside. A gun with a firing mechanism I designed would lay on top of a chassis with omnidirectional wheels, as well as IR distance sensors on the back and sides. The robot would be completely autonomous, using a random number generator to decide where to move (uses sensors to ensure it doesn’t fall off the table), and when to fire a ball. The gun was designed to hold multiple balls, allowing me to practice playing ping pong alone. It also has an ESP32 devkit attached so it can wirelessly receive signals from a wireless controller, allowing it to switch from manual to autonomous.
 
-
+# CHANGE LOG
 V1:
 There would be a DC motor (although I could not find a strong one, I will get that later for an upgrade), that would pull on a string attached to a firing pin, and once it pulls back a certain amount, the pin would lock into place and a ping pong ball will fall in front of it. There will be a servo just underneath where the pin locks in, and it would push down on it, unlocking the pin (which has powerful springs), and forcefully hitting the ball, making it fly out of the gun, and also locking the next ball in queue on top of the pin, so the process can repeat with the next ball. I had to learn a lot of new concepts in order to try and make this work, including having to use millis() instead of delay() so it would not interrupt anything, and also larned how to design mechanisms that would prove effective, and also learned about supersizing a lot of my projects, as this was by far one of my biggest, requiring a total of 5 DC motors (controlled with a motor shield consisting of 2 L293Ds, and the last motor being controlled by an external L293D), a servo, and 3 IR proximity sensors. 
 
