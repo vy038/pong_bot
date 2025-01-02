@@ -1,9 +1,9 @@
 # PONG BOT V1.5
 
-Manual Control Demo
+Manual Control Demo <br>
 ![Pong_BotManualDemo-ezgif com-optimize](https://github.com/user-attachments/assets/dd1ae97f-c8b9-466b-a60a-9e3eb2252fb0)
 
-Auto Control Demo
+Auto Control Demo <br>
 ![Pong_BotAutoDemo-ezgif com-optimize](https://github.com/user-attachments/assets/39698ffa-3c8b-4bfe-8cef-138e1dcfbbaf)
 
 
