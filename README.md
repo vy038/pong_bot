@@ -1,4 +1,6 @@
-# PONG BOT V1.5
+# PONG BOT V 1.5
+
+![20241005_104122](https://github.com/user-attachments/assets/0eeedc95-aba9-4651-9e95-cb811e43ed69)
 
 Manual Control Demo <br>
 ![Pong_BotManualDemo-ezgif com-optimize](https://github.com/user-attachments/assets/dd1ae97f-c8b9-466b-a60a-9e3eb2252fb0)
