@@ -15,7 +15,7 @@ This has two modes, auto and manual. The robot moves and fires autonomously in a
 #include <Adafruit_MotorShield.h>
 #include <Servo.h>
 
-//i2c address for shield
+// i2c address for shield
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 
 // DC motors definition
@@ -53,24 +53,26 @@ int decision = 0;
 int fireOrNo = 1;
 int armed = 0;
 
-// timer stuff (variables)
-unsigned long startMillisFiring;  //some global variables available anywhere in the program
+// timer stuff for firing
+unsigned long startMillisFiring; 
 unsigned long currentMillisFiring;
-unsigned long startMillis;  //some global variables available anywhere in the program
+
+// general timer stuff
+unsigned long startMillis;
 unsigned long currentMillis;
 
-// robot mode
+// robot mode (manual / auto)
 int mode = 0;
 
 void setup() {
   // serial monitor
   Serial.begin(9600);
 
+  // connect to motor driver shield
   if (!AFMS.begin()) {  // create with the default frequency 1.6KHz
                         // if (!AFMS.begin(1000)) {  // OR with a different frequency, say 1KHz
     Serial.println("Could not find Motor Shield. Check wiring.");
-    while (1)
-      ;
+    while (1);
   }
   Serial.println("Motor Shield found.");
 
@@ -104,6 +106,7 @@ void setup() {
   motorRF->setSpeed(140);
   motorLF->setSpeed(140);
   motorLB->setSpeed(140);
+
   motorRB->run(RELEASE);
   motorRF->run(RELEASE);
   motorLF->run(RELEASE);
@@ -112,7 +115,7 @@ void setup() {
   // set random seed for robot decision making
   randomSeed(analogRead(0));
 
-  // arm the robot
+  // arm the robot (pull firing pin back)
   if (armed == 0) {
     servoPull.write(180);
     delay(500);
@@ -129,7 +132,7 @@ void setup() {
   currentMillisFiring = 0;
   currentMillis = 0;
 
-  // start timers
+  // start general timers
   startMillisFiring = millis();
   startMillis = millis();
 
@@ -142,7 +145,7 @@ void setup() {
           side(digitalRead(right), digitalRead(buttonB));
         } else if ((digitalRead(backward) == 1 || digitalRead(forward) == 1) && digitalRead(right) == LOW && digitalRead(left) == LOW) {  // movement for true forward/backward
           forwardFunc(digitalRead(forward));
-        } else if ((digitalRead(backward) == 1 || digitalRead(forward) == 1) && (digitalRead(right) == 1 || digitalRead(left) == 1)) {  // diagonal
+        } else if ((digitalRead(backward) == 1 || digitalRead(forward) == 1) && (digitalRead(right) == 1 || digitalRead(left) == 1)) {  // movement for diagonals/turns
           if (digitalRead(buttonB) == HIGH) {               // turn or
             side(digitalRead(right), digitalRead(buttonB));
           } else {                                          // go diagonal
@@ -155,7 +158,7 @@ void setup() {
           motorLB->run(RELEASE);
         }
 
-        if (digitalRead(buttonA) == HIGH && digitalRead(buttonB) == HIGH) {  // change modes and reset all timers
+        if (digitalRead(buttonA) == HIGH && digitalRead(buttonB) == HIGH) {  // change modes and reset all timers once both buttons are pressed at the same time
           motorRB->run(RELEASE);
           motorRF->run(RELEASE);
           motorLF->run(RELEASE);
@@ -163,13 +166,15 @@ void setup() {
           delay(750);
           mode = 1;
           break;
-        } else if (digitalRead(buttonA) == HIGH) {  // fire when a button is pressed
+
+        } else if (digitalRead(buttonA) == HIGH) {  // fire when 'a' button is pressed
           fire();
         }
 
 
-      } else {  // if bot is on the edge of something
-        Serial.println("Edging");
+      } else {  // if bot is on the edge of table, move away
+
+        Serial.println("Edge readings");
         Serial.print(digitalRead(frontIRSensor));
         Serial.print(" ");
         Serial.print(digitalRead(backIRSensor));
@@ -194,18 +199,18 @@ void setup() {
         }
       }
 
-      delay(10);            // save resources
+      delay(10);
+
     } else {                // AUTO MODE
       if (IRRead() == 0) {  // if all sensors detect that the bot is not on an edge or near a wall
         // code for random movement and firing here
 
-        currentMillis = millis();                               // get the current "time" (actually the number of milliseconds since the program started)
-        if (currentMillis - startMillis >= random(2000, 4000))  // test whether the period has elapsed, adjust milisecond delay (2000 - 4000) as needed
-        {                                                       // random movement decision
+        currentMillis = millis();                                 // get the current "time" (actually the number of milliseconds since the program started)
+        if (currentMillis - startMillis >= random(2000, 4000))  { // test whether the period has elapsed, adjust milisecond delay (2000 - 4000) as needed                                                 
+          // random movement decision
           decision = random(1, 5);
           if (fireOrNo != -1) {  // seperate random variable to see if the robot should fire a ball or not
             fireOrNo = random(1, 9);
-            Serial.println("eibwefwewerwewrewreewrwrerewrewrewrewwrewrewrewer");
           }
           Serial.println(fireOrNo);
           startMillis = currentMillis;  // IMPORTANT to save the start time of the current time
@@ -229,7 +234,7 @@ void setup() {
         // uses a random number generated periodically to see whether the bot should stop and fire a ball randomly
         if (fireOrNo >= 7) {
           fireOrNo = -1;
-          Serial.println("FIRING");
+          Serial.println("FIRE");
           motorRB->run(RELEASE);
           motorRF->run(RELEASE);
           motorLF->run(RELEASE);
@@ -248,8 +253,8 @@ void setup() {
         }
 
 
-      } else {  // if bot is on the edge of something
-        Serial.println("Edging");
+      } else {  // if bot is on the edge of table, move away
+        Serial.println("Edge readings");
         Serial.print(digitalRead(frontIRSensor));
         Serial.print(" ");
         Serial.print(digitalRead(backIRSensor));
@@ -278,12 +283,12 @@ void setup() {
         }
       }
 
-      delay(10);  //save resources
+      delay(10);
     }
   }
 }
 
-void loop() {
+void loop() { // used when loop is broken out of, returns back to setup to restart everything (ususally used when changing modes)
   setup();
 }
 
@@ -386,25 +391,25 @@ void fire() {  //fires a ball, works fine, adjust timing (Maybe replace with mil
 
   // STAGE 1: pull firing pin, firing ball
   servoPull.write(0);
-  Serial.println("0+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  Serial.println("STAGE 1");
   delay(500);
 
   // STAGE 2: turn motor with string back to original position for 750 ms
-  Serial.println("1+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  Serial.println("STAGE 2");
   servoPull.write(180);
   delay(500);
 
-  Serial.println("1.5++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  Serial.println("STAGE 2.5");
   servoWheel.write(130);
   delay(950);
 
   // STAGE 3: return motor to og pos
-  Serial.println("2+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  Serial.println("STAGE 3");
   servoWheel.write(0);
   delay(400);
 
   // reset stage after 500 ms grace period
-  Serial.println("Fire end+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  Serial.println("ENDED FIRING");
   fireOrNo = 1;
 }
 
@@ -426,6 +431,8 @@ int IRRead() {
   frontDistance = duration * 0.034 / 2;
   /************** End US Measurement Section ***********/
 
+
+  // read the sensor data and return function values
   if (digitalRead(leftIRSensor) == LOW && digitalRead(backIRSensor) == LOW && digitalRead(rightIRSensor) == LOW && digitalRead(frontIRSensor) == LOW && frontDistance > 10) {
     return 0;
   } else if (digitalRead(leftIRSensor) == HIGH) {
