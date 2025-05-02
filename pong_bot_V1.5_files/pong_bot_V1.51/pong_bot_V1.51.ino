@@ -229,7 +229,7 @@ void setup() {
         // uses a random number generated periodically to see whether the bot should stop and fire a ball randomly
         if (fireOrNo >= 7) {
           fireOrNo = -1;
-          Serial.println("FIRE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+          Serial.println("FIRING");
           motorRB->run(RELEASE);
           motorRF->run(RELEASE);
           motorLF->run(RELEASE);
